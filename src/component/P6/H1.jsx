@@ -1,25 +1,94 @@
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { Col, Divider, Input, Row, Tooltip } from "antd";
+import { Button, Card, Col, Divider, Input, Modal, Row, Tooltip } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import _ from "lodash";
 import { useState } from "react";
+import { GroupedColumnPlot } from "../../charts/GroupedColumnPlot";
+import { PiePlot } from "../../charts/PiePlot";
+import H1Graph from "./H1Graph";
  
 import { P6_1 } from "./Type.ts";
 
 const H1 = (props) => {
   const [currentYearData, setCurrentYearData] = useState(new P6_1({}));
   const [previousYearData, setPreviousYearData] = useState(new P6_1({}));
+  const [open, setOpen] = useState(false);
 
-   
+  const data = [
+    {
+      name: 'Current Year',
+      xField: 'Total Electricity Consumption',
+      yField: 18.9,
+    },
+    {
+      name: 'Current Year',
+      xField: 'Total Fuel Consumption',
+      yField: 28.8,
+    },
+    {
+      name: 'Current Year',
+      xField: 'Energy Consumption Through other sources',
+      yField: 39.3,
+    },
+    
+    {
+      name: 'Previous Year',
+      xField: 'Total Electricity Consumption',
+      yField: 12.4,
+    },
+    {
+      name: 'Previous Year',
+      xField: 'Total Fuel Consumption',
+      yField: 23.2,
+    },
+    {
+      name: 'Previous Year',
+      xField: 'Energy Consumption Through other sources',
+      yField: 34.5,
+    },
+  ];
+
+  const pieData1 = [
+    {
+      type: 'Total Electricity Consumption',
+      value: 27,
+    },
+    {
+      type: 'Total Fuel Consumption',
+      value: 25,
+    },
+    {
+      type: 'Energy Consumption Through other sources',
+      value: 18,
+    },
+  ];
+
+  const pieData2 = [
+    {
+      type: 'Total Electricity Consumption',
+      value: 27,
+    },
+    {
+      type: 'Total Fuel Consumption',
+      value: 25,
+    },
+    {
+      type: 'Energy Consumption Through other sources',
+      value: 18,
+    },
+  ];
 
   return (
     <div>
       <Row style={{ marginTop: "15px", paddingBottom: "10px" }}>
-        <Col flex="900px">
+        {/* <Button type="primary" onClick={showModal}>
+          Graphical Representation
+        </Button> */}
+        <Col>
           <Row>
-            <Col style={{ margin: "5px" }} span={18}>
+            <Col style={{ margin: "5px" }} span={24}>
               <Row>
-                <Col style={{ padding: "6px" }} span={8}></Col>
+                <Col style={{ padding: "6px" }} span={10}></Col>
                 <Col offset={1} span={6}>
                   <p className="input-data-placeholder-heading">
                     Current Financial Year
@@ -277,8 +346,7 @@ const H1 = (props) => {
         <Col flex="auto"></Col>
       </Row>
 
-       
-       
+      <H1Graph />
     </div>
   );
 };

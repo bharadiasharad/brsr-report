@@ -1,5 +1,5 @@
 import { BarChartOutlined } from '@ant-design/icons';
-import { Alert, Card, Col, Collapse, Divider, Row, Space } from 'antd';
+import { Alert, Card, Col, Collapse, Divider, Modal, Row, Space } from 'antd';
 import { useState } from 'react';
 import { P1Heading, P6Heading } from '../constants/Heading';
 import { BRSRSchema } from '../constants/Principle';
@@ -24,22 +24,41 @@ import H18 from './P6/H18';
 import H19 from './P6/H19';
 import H20 from './P6/H20';
 import H21 from './P6/H21';
+import H1Graph from './P6/H1Graph';
 
 const { Panel } = Collapse;
 const { Meta } = Card;
 
 const Principle6 = () => {
-  const onChange = (key) => {
-    console.log(key);
+  const [selectedGraphDefinationId, setSelectedGraphDefinationId] = useState("");
+
+  const genExtra = (definationId) => {
+    switch (definationId) {
+      case P6Heading[0].definationId:
+      case P6Heading[1].definationId:
+        return (<BarChartOutlined style={{
+          zIndex: "9999", color: "blue", padding:"5px", background: "light-gray"
+        }} id= {definationId} onClick = {(event) => {
+          // If you don't want click extra trigger collapse, you can prevent this:
+          debugger;
+          
+          event.stopPropagation();
+          showModal(event.target.parentNode.parentNode.id || event.target.parentNode.id);
+        }}
+      />)
+      default:
+        return <></>
+    }
   };
-  const genExtra = () => (
-    <BarChartOutlined
-      onClick={(event) => {
-        // If you don't want click extra trigger collapse, you can prevent this:
-        event.stopPropagation();
-      }}
-    />
-  );
+
+  const getGraphData = () => {
+    switch (selectedGraphDefinationId) {
+      case P6Heading[0].definationId:
+        return <H1Graph />
+      default:
+        return "";
+    }
+  }
 
   const getHeadingData = (definationId) => {
     switch (definationId) {
@@ -91,6 +110,14 @@ const Principle6 = () => {
 
   }
 
+  const showModal = (definationId) => {
+    setSelectedGraphDefinationId(definationId);
+  };
+
+  const handleCancel = () => {
+    setSelectedGraphDefinationId("");
+  };
+
   return (
     <div>
       <Row >
@@ -107,13 +134,13 @@ const Principle6 = () => {
           </Card>
         </Col>
       </Row>
-      <Row style={{ paddingBottom: "10px" }}>
-        <Col offset={2} span={3}>
+      <Row offset={2} justify={"center"} style={{ paddingBottom: "10px" }}>
+        <Col xs={12} sm={10} md={3} lg={3} xl={3}>
           <Card style={{ height: "240px", background: "gray" }} >
           </Card>
         </Col>
-        <Col span={17} style={{ marginLeft: "10px" }}>
-          <Card style={{ height: "240px" }}>
+        <Col xs={20} sm={20} md={17} lg={17} xl={17} style={{ marginLeft: "10px" }}>
+          <Card style={{ height: "max-content" }}>
             <Meta title="Executive Director & CFOs Message" description="Road Towards a Sustainable Future The world we live in today is radically impacted by climate change and irresponsible consumption leading to resource scarcity. This is the time to act responsibly and embed sustainability into the way of doing business. We have set ambitious Environment, Social and Governance (ESG) goals towards water and carbon neutrality, zero waste to landfill, green chemistry and well-being of employees and partners and have already made significant progress. We articulated our ESG framework as Championing." />
             <Divider />
             <Meta title="Ritech Tiwari" description="Executive Director & CFO" />
@@ -125,14 +152,14 @@ const Principle6 = () => {
           <h3>Essential Indicators</h3>
           <Collapse
             defaultActiveKey={['1']}
-            onChange={onChange}
+            onChange={() => {}}
             ghost
           >
             {
               P6Heading.map((data, index) => {
                 return (
                   <>
-                    <Panel header={(++index) + ". " + data.title} key={data.title} extra={genExtra()}>
+                    <Panel header={(++index) + ". " + data.title} key={data.title} extra={genExtra(data.definationId)}>
                       <Space direction="vertical" style={{ width: '100%' }}>
                         <Alert message={data.description} type="info" />
                         <Card>{getHeadingData(data.definationId)}</Card>
@@ -147,6 +174,9 @@ const Principle6 = () => {
           </Collapse>
         </Col>
       </Row>
+      <Modal open={!!selectedGraphDefinationId} title={"Graphical Representation"} onCancel={handleCancel} width={"70%"} style={{ top: 20 }}>
+          {getGraphData()}
+      </Modal>
     </div>
   );
 };
